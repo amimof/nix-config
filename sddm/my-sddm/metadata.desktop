@@ -1,0 +1,8 @@
+[SddmGreeterTheme]
+Name=Hyprlock
+Description=Minimal Hyprlock-inspired SDDM theme
+Author=Amir
+License=MIT
+Type=sddm-theme
+Version=1.0
+MainScript=Main.qml
