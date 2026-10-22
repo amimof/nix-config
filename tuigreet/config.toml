@@ -1,0 +1,22 @@
+[display]
+show_time = true
+greeting = "Welcome to the system"
+align_greeting = "center"
+
+[remember]
+username = true
+user_session = true
+
+[secret]
+mode = "characters"
+characters = "●"
+
+[theme]
+border = "white"
+text = "cyan"
+prompt = "cyan"
+time = "cyan"
+action = "gray"
+button = "gray"
+container = "black"
+input = "white"

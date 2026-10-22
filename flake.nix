@@ -6,59 +6,77 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # Home manager
-    home-manager.url = "github:nix-community/home-manager/release-26.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    # Noctalia
+    noctalia = {
+      # url = "github:noctalia-dev/noctalia";
+      url = "github:noctalia-dev/noctalia";
+      inputs.nixpkgs.follows = "nixpkgs";
+    }; 
+    # Noctalia
+    noctalia-greeter = {
+      url = "github:noctalia-dev/noctalia-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+    }; 
 
-    # Dotfiles
-    dotfiles = {
-      url = "github:amimof/dotfiles";
-      flake = false;
+    # Zen Browser
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
+
+	  # Dotfiles
+		dotfiles = {
+			url = "github:amimof/dotfiles";
+		};
     
   };
+
+
 
   outputs =
     {
       self,
       nixpkgs,
-      home-manager,
+			dotfiles,
       ...
     }@inputs:
     let
-      inherit (self) outputs;
-      lib = nixpkgs.lib // home-manager.lib;
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      # forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
-      pkgsFor = lib.genAttrs systems (
-        system:
-        import nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-          overlays = [
-            (final: prev: {
-              unstable = import inputs.nixpkgs-unstable {
-                config.allowUnfree = true;
-                system = prev.system;
-              };
-            })
-          ];
-        }
-      );
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
     in
     {
+
       # NixOS configuration entrypoint
       # Available through 'nixos-rebuild --flake .#your-hostname'
       nixosConfigurations = {
-        nixos-vm = lib.nixosSystem {
-          system = "x86_64-linux";
+        nixos-vm = nixpkgs.lib.nixosSystem {
           specialArgs = {
-            inherit home-manager;
+						inherit inputs;
           };
-          modules = [ ./machines/nixos-vm ];
+          modules = [ 
+						./hosts/nixos-vm
+					];
+        };
+
+        framework = nixpkgs.lib.nixosSystem {
+					system = "x86_64-linux";
+          specialArgs = {
+						inherit inputs;
+          };
+          modules = [ 
+						dotfiles.nixModules.default
+						{ dotfiles.user = "amir"; }
+						./hosts/framework
+					];
+        };
+
+        server = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+						inherit inputs;
+          };
+          modules = [ 
+						./hosts/server
+					];
         };
       };
     };

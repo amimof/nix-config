@@ -5,7 +5,7 @@ let
     pname = "my-sddm";
     version = "1.0";
 
-    src = ../sddm/my-sddm;
+    src = ../../sddm/my-sddm;
 
     installPhase = ''
       mkdir -p $out/share/sddm/themes/my-sddm

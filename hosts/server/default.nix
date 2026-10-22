@@ -12,27 +12,15 @@
   imports = [
     ./hardware-configuration.nix
     ../common
+    ../../modules/podman.nix
     home-manager.nixosModules.home-manager
   ];
 
   home-manager.users.amir = import ./home.nix;
 
-  networking.hostName = "amirs-fw13pro";
-
-  services.niri.enable = true;
-  services.pipewire.enable = true;
-  services.displayManager = {
-   sddm = {
-     enable = true;
-     wayland.enable = true;
-   };
-   defaultSession = "niri";
-  }; 
+  networking.hostName = "server";
 
   environment.systemPackages = with pkgs; [
-    niri
-    xwayland-satellite
-    walker
   ];
 
   system.stateVersion = "26.05";

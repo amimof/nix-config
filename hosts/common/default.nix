@@ -3,23 +3,26 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  imports =
-    [ 
-    ];
+  imports = [ 
+  ];
+
 
   # Bootloader.
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
 
+    initrd.systemd.enable = true;
     # Use latest kernel.
     kernelPackages = pkgs.linuxPackages_latest;
 
     # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     plymouth.enable = true;
+    plymouth.theme = "bgrt";
+    plymouth.logo = "${pkgs.nixos-icons}/share/icons/hicolor/48x48/apps/nix-snowflake-white.png";
 
     # Start plymouth with a quiet boot
     consoleLogLevel = 3;
@@ -32,12 +35,7 @@
       "rd.systemd.show_status=auto"
     ];
 
-    initrd.systemd.enable = true;
   };
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -70,7 +68,6 @@
     description = "Amir Mofasser";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
-    # shell = "zsh";
     shell = pkgs.zsh;
   };
 
@@ -83,32 +80,23 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # inputs.zen-browser.packages.x86_64-linux.default
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
     curl
     vim
-    kitty
-    kubectl
-    kubectx
-    spotify
-    protonmail-desktop
-    nerd-fonts.fira-code
-    firefox
+    neovim
+    eza
+    fzf
+		tree-sitter
+		ripgrep
+		rbw
+		pinentry-qt
+		darkly
+		ddcutil
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-  # programs.niri.enable = true;
+	qt.enable = true;
 
   programs.neovim.enable = true;
   programs.zsh = {
@@ -126,6 +114,14 @@
       user.email = "amimof@users.noreply.github.com";
     };
   };
+
+  # Fonts
+  fonts.packages = with pkgs; [
+		nerd-fonts.fira-code
+		nerd-fonts.ubuntu
+    nerd-fonts.symbols-only
+  ];
+
   # List services that you want to enable:
   services = {
     snapper = {
@@ -151,14 +147,15 @@
     };
   };
 
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  # Disable the OpenSSH daemon.
+  services.openssh.enable = false;
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  # Enable firewall
+  networking.firewall = {
+    enable = true;
+    # allowedTCPPorts = [ ... ];
+    # allowedUDPPorts = [ ... ];
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
