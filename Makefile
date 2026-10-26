@@ -39,5 +39,5 @@ list-generations: ## List existing generations
 	sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
 
 garbage-collect: ## Delete generations older than 7d
-	sudo nix-env --delete-generations +5 --profile /nix/var/nix/profiles/system
+	sudo nix-env --delete-generations +2 --profile /nix/var/nix/profiles/system
 	sudo nixos-rebuild boot --flake $(TARGET)

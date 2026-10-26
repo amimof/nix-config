@@ -35,9 +35,8 @@
   environment.systemPackages = with pkgs; [
     niri
     xwayland-satellite
+		wl-clipboard
   ];
 
 	dotfiles.links.".config/niri" = "/niri/dot-config/niri";
-
-  system.stateVersion = "26.05";
 }

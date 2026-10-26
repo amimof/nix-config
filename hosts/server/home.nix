@@ -24,5 +24,4 @@
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
   ];
-  home.stateVersion = "26.05";
 }

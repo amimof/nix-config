@@ -28,6 +28,11 @@
 		dotfiles = {
 			url = "github:amimof/dotfiles";
 		};
+
+		# flake.nix inputs
+		nixos-hardware = {
+			url = "github:NixOS/nixos-hardware/master";
+		};
     
   };
 
