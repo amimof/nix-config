@@ -11,8 +11,6 @@
     ../../modules/nixos/niri.nix
     ../../modules/nixos/zen.nix
     ../../modules/nixos/noctalia.nix
-    ../../modules/nixos/elephant.nix
-    ../../modules/nixos/walker.nix
     ../../modules/nixos/bat.nix
     ../../modules/nixos/dolphin.nix
     ../../modules/nixos/environment.d.nix
@@ -22,7 +20,8 @@
     ../../modules/nixos/neovim.nix
     ../../modules/nixos/git.nix
     ../../modules/nixos/gtk.nix
-
+    ../../modules/nixos/ollama.nix
+    ../../modules/nixos/virtualisation.nix
 		inputs.nixos-hardware.nixosModules.framework-intel-core-ultra-series3
   ];
 
@@ -64,6 +63,8 @@
 		kubecolor
 		libreoffice
 		talosctl
+		seahorse
+		drawio
   ];
 
   # This value determines the NixOS release from which the default

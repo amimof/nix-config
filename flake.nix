@@ -71,6 +71,7 @@
           modules = [ 
 						dotfiles.nixModules.default
 						{ dotfiles.user = "amir"; }
+						{ dotfiles.mutable = true; }
 						./hosts/framework
 					];
         };
