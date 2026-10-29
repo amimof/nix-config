@@ -20,7 +20,6 @@
     ../../modules/nixos/neovim.nix
     ../../modules/nixos/git.nix
     ../../modules/nixos/gtk.nix
-    ../../modules/nixos/ollama.nix
     ../../modules/nixos/virtualisation.nix
 		inputs.nixos-hardware.nixosModules.framework-intel-core-ultra-series3
   ];
@@ -47,6 +46,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
+		gnumake
     neovim
     eza
     fzf
