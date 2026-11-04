@@ -45,6 +45,12 @@
     nerd-fonts.symbols-only
   ];
 
+	services.logind.settings.Login = {
+		HandleLidSwitch = "suspend";
+		HandleLidSwitchExternalPower = "ignore";
+		HandleLidSwitchDocked = "ignore";
+	};
+
   environment.systemPackages = with pkgs; [
 		gnumake
     neovim

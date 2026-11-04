@@ -37,6 +37,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.networkmanager.dns = "systemd-resolved";
 	networking.networkmanager.plugins = with pkgs; [
     networkmanager-openconnect
 	];
@@ -131,6 +132,7 @@
   };
   services.openssh.enable = false;
 	services.udisks2.enable = true;
+  services.resolved.enable = true;
 
   # Enable firewall
   networking.firewall = {
