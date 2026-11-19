@@ -1,4 +1,27 @@
-{ ... }:
+{ pkgs, ... }:
+let
+  agentTools = with pkgs; [
+    git
+    gnumake
+    go
+    gopls
+    nodejs
+    ripgrep
+    fd
+    curl
+    cacert
+    vim
+    lsof
+    net-tools
+    claude-code
+    opencode
+    zsh
+    fish
+    zig
+    unzip
+    vhs
+  ];
+in
 {
   # QEMU/KVM + libvirt
   virtualisation.libvirtd.enable = true;
@@ -24,7 +47,6 @@
     internalInterfaces = [ "ve-+" ];
     externalInterface = "wlp0s20f3";
   };
-
 
 	# Isolated agent container runs OpenCode. We also need claude code because the opencode-with-claude plugin requires it.
   # TODO: Create a module out of this intead of having it here in this flake.
@@ -52,7 +74,7 @@
         extraGroups = [ ];
       };
 
-			networking.firewall.allowedTCPPorts = [ 3456 ];
+			networking.firewall.allowedTCPPorts = [ 3456 4096 ];
 
 			nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
 				"claude-code"
@@ -63,22 +85,33 @@
 				"flakes"
 			];
 
-      environment.systemPackages = with pkgs; [
-        git
-        gnumake
-        go
-        gopls
-        nodejs
-        ripgrep
-        fd
-        curl
-        cacert
-				vim
-				lsof
-				net-tools
-				claude-code
-				opencode
-      ];
+			environment.systemPackages = agentTools;
+
+			systemd.services.opencode-server = {
+				description = "OpenCode API Server";
+
+				wantedBy = [ "multi-user.target" ];
+				after = [ "network.target" ];
+
+				path = agentTools;
+
+
+				serviceConfig = {
+					Type = "simple";
+					ExecStart = "${pkgs.opencode}/bin/opencode serve --hostname 0.0.0.0 --port 4096";
+					Restart = "on-failure";
+					Environment = "CLAUDE_PROXY_HOST=0.0.0.0";
+					RestartSec = "5s";
+					User = "agent";
+					WorkingDirectory = "/workspace";
+					# Don't let a stuck OpenCode shutdown delay container shutdown.
+					TimeoutStopSec = "15s";
+					# Terminate the entire service cgroup, including child processes.
+					KillMode = "control-group";
+				};
+
+			};
+
     };
   };
 

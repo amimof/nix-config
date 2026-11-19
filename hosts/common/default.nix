@@ -89,13 +89,6 @@
     vim
   ];
 
-  programs.neovim.enable = true;
-  programs.zsh = {
-    enable = true;
-    syntaxHighlighting.enable = true;
-    enableLsColors = true;
-  };
-  programs.starship.enable = true;
   programs.git = {
     enable = true;
     config = {

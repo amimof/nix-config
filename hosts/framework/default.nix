@@ -49,7 +49,17 @@
 		HandleLidSwitch = "suspend";
 		HandleLidSwitchExternalPower = "ignore";
 		HandleLidSwitchDocked = "ignore";
+		LidSwitchIgnoreInhibited = "yes";
 	};
+
+	# Prevent accidental wakeup by touchpad when lid is closed
+	services.udev.extraRules = ''
+		ACTION=="add", SUBSYSTEM=="i2c", KERNEL=="i2c-PIXA3854:00", ATTR{power/wakeup}="disabled"
+	'';
+
+	services.fprintd.enable = true;
+  security.pam.services.sudo.fprintAuth = true;
+	security.pam.services.login.fprintAuth = false;
 
   environment.systemPackages = with pkgs; [
 		gnumake
@@ -71,6 +81,8 @@
 		talosctl
 		seahorse
 		drawio
+		bibata-cursors
+		openstackclient
   ];
 
   # This value determines the NixOS release from which the default
